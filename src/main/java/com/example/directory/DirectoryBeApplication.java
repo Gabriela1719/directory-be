@@ -9,5 +9,4 @@ public class DirectoryBeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DirectoryBeApplication.class, args);
 	}
-
 }
