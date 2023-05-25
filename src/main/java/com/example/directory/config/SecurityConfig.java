@@ -2,7 +2,6 @@ package com.example.directory.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,13 +19,15 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.POST, "/adresar/kontakt").authenticated()
-                    .requestMatchers(HttpMethod.PUT, "/adresar/{id}/favorite", "/adresar/detalji/{id}").authenticated()
-                    .requestMatchers(HttpMethod.GET, "/adresar", "/adresar/{id}", "/adresar/omiljeni", "/profile").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/adresar/kontakt/{id}").authenticated()
-                    .requestMatchers("/register").permitAll()
+                .requestMatchers("/auth").permitAll()
+                .requestMatchers("/login" ,"/register").anonymous()
+                .anyRequest().authenticated()
                 .and()
-                .formLogin().defaultSuccessUrl("/adresar", true)
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/adresar", true)
+                .and()
+                .rememberMe()
                 .and()
                 .logout()
                     .logoutUrl("/logout")
@@ -49,7 +50,11 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowCredentials(true)
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
             }
         };
     }
