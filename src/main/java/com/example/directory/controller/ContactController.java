@@ -3,6 +3,7 @@ package com.example.directory.controller;
 import com.example.directory.dto.ContactDto;
 import com.example.directory.mappers.ContactMapper;
 import com.example.directory.model.Contact;
+import com.example.directory.model.Favorite;
 import com.example.directory.model.UserAccount;
 import com.example.directory.repository.UserAccountRepository;
 import com.example.directory.service.ContactService;
@@ -44,6 +45,15 @@ public class ContactController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/omiljeni")
+    public List<Favorite> getFavoriteContacts(Authentication authentication) {
+        String email = authentication.getName();
+        Optional<UserAccount> userOptional = userAccountRepository.findByEmail(email).stream().findFirst();
+        UserAccount currentUser = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return contactService.getFavoriteContacts(currentUser);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ContactDto> getContactById(@Valid @PathVariable Long id, Authentication authentication) {
         String email = authentication.getName();
@@ -74,7 +84,7 @@ public class ContactController {
     }
 
     @PutMapping("/{id}/favorite")
-    public ResponseEntity<Void> toggleFavoriteStatus(@Valid @PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<Void> toggleFavoriteStatus(@Valid @PathVariable Long id, Authentication authentication, Favorite favorite) {
         String email = authentication.getName();
         Optional<UserAccount> userOptional = userAccountRepository.findByEmail(email).stream().findFirst();
         UserAccount currentUser = userOptional.orElseThrow(() -> new UsernameNotFoundException("Contact not found"));
@@ -83,7 +93,7 @@ public class ContactController {
         if (optionalContact.isPresent()) {
             Contact contact = optionalContact.get();
             if (contact.getUser().equals(currentUser)) {
-                contactService.toggleFavoriteStatus(contact);
+                contactService.toggleFavoriteStatus(contact, favorite);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -91,19 +101,6 @@ public class ContactController {
         } else {
             throw new UsernameNotFoundException("Cannot find contact with Id: " + id);
         }
-    }
-
-    @GetMapping("/omiljeni")
-    public List<ContactDto> getFavoriteContacts(Authentication authentication) {
-        String email = authentication.getName();
-        Optional<UserAccount> userOptional = userAccountRepository.findByEmail(email).stream().findFirst();
-        UserAccount currentUser = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        List<Contact> favoriteContacts = contactService.getFavoriteContacts(currentUser);
-
-        return favoriteContacts.stream()
-                .map(contactMapper::contactToContactDto)
-                .collect(Collectors.toList());
     }
 
     @PutMapping("/detalji/{id}")

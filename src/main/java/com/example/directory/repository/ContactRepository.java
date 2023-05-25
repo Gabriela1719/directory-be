@@ -10,6 +10,4 @@ import java.util.List;
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
     List<Contact> findByUser(UserAccount currentUser);
-
-    List<Contact> findByUserAndFavorite(UserAccount user, boolean b);
 }
