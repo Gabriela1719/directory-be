@@ -18,13 +18,13 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/register")
-public class LoginController {
+public class AuthController {
 
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserAccountMapper userAccountMapper;
 
-    public LoginController(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder, UserAccountMapper userAccountMapper) {
+    public AuthController(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder, UserAccountMapper userAccountMapper) {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAccountMapper = userAccountMapper;
@@ -53,5 +53,10 @@ public class LoginController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         response.sendRedirect("/login?logout=true");
+    }
+
+    @PostMapping("/login")
+    public void login(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/adresar");
     }
 }

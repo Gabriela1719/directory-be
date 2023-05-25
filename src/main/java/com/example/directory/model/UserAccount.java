@@ -12,23 +12,12 @@ public class UserAccount {
     private String password;
     private String email;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Contact> contacts = new ArrayList<>();
-
     public UserAccount() {}
 
     public UserAccount(String username, String password) {
         this.username = username;
         this.password = password;
     }
-
-//    public List<Contact> getContacts() {
-//        return contacts;
-//    }
-//
-//    public void setContacts(List<Contact> contacts) {
-//        this.contacts = contacts;
-//    }
 
     public Long getId() {
         return id;
