@@ -3,7 +3,6 @@ package com.example.directory.service;
 import com.example.directory.dto.ContactDto;
 import com.example.directory.model.Contact;
 import com.example.directory.model.ContactGroup;
-import com.example.directory.model.Favorite;
 import com.example.directory.model.UserAccount;
 import com.example.directory.repository.ContactGroupRepository;
 import com.example.directory.repository.ContactRepository;
@@ -46,11 +45,18 @@ public class ContactService {
         return contactRepository.findByUser(currentUser);
     }
 
-    public Optional<Contact> getContactById(Long id) {
-        return contactRepository.findById(id);
+    public Contact getContactById(Long id, Authentication authentication) {
+        UserAccount currentUser = getCurrentUser(authentication);
+        Optional<Contact> optionalContact = contactRepository.findById(id);
+        Contact contact = optionalContact.orElseThrow(RuntimeException::new);
+        if (!contact.getUser().equals(currentUser)) {
+            throw new RuntimeException("Contact not found contact with id: "+ id);
+        }
+        return contact;
     }
 
-    public Contact createContact(Contact contact, UserAccount currentUser) {
+    public Contact createContact(Contact contact, Authentication authentication) {
+        UserAccount currentUser = getCurrentUser(authentication);
         ContactGroup group = contactGroupRepository.findByNameAndLastname(contact.getName(), contact.getLastname());
 
         if (group == null) {
@@ -64,49 +70,21 @@ public class ContactService {
         return contactRepository.save(contact);
     }
 
-    public Contact updateContact(Long id, ContactDto contactDto) {
+    public Contact updateContact(Long id, ContactDto contactDto, Authentication authentication) {
+        UserAccount currentUser = getCurrentUser(authentication);
         Contact contact = contactRepository.findById(id).orElseThrow(RuntimeException::new);
         contact.setName(contactDto.getName());
         contact.setLastname(contactDto.getLastname());
         contact.setValue(contactDto.getValue());
-        contact.setFavorite(contactDto.isFavorite());
         contact.setContactType(contactDto.getContactType());
         contact.setDateTime(contactDto.getDateTime());
+        contact.setUser(currentUser);
         return contactRepository.save(contact);
     }
 
     public void deleteContactById(Long id) {
         favoriteRepository.deleteById(id);
         contactRepository.deleteById(id);
-    }
-
-    //FAVORITE
-
-    public void toggleFavoriteStatus(Contact contact) {
-        contact.setFavorite(!contact.isFavorite());
-
-        if (contact.isFavorite()) {
-            Favorite favorite = new Favorite();
-            favorite.setName(contact.getName());
-            favorite.setLastname(contact.getLastname());
-            favorite.setContactType(contact.getContactType());
-            favorite.setValue(contact.getValue());
-            favorite.setDateTime(contact.getDateTime());
-            favorite.setUser(contact.getUser());
-            favorite.setContact(contact);
-            favoriteRepository.save(favorite);
-        } else {
-            List<Favorite> favorites = contact.getFavorites();
-            if (favorites != null && !favorites.isEmpty()) {
-                favoriteRepository.deleteAll(favorites);
-                favorites.clear();
-            }
-        }
-        contactRepository.save(contact);
-    }
-
-    public List<Favorite> getFavoriteContacts(UserAccount currentUser) {
-        return favoriteRepository.findByUser(currentUser);
     }
 
 }

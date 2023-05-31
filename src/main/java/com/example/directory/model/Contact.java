@@ -52,6 +52,7 @@ public class Contact {
         this.favorites = favorites;
     }
 
+
     public List<Favorite> getFavorites() {
         return favorites;
     }

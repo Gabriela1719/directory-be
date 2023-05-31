@@ -13,7 +13,6 @@ public interface ContactMapper {
             @Mapping(source = "lastname", target = "lastname"),
             @Mapping(source = "dateTime", target = "dateTime"),
             @Mapping(source = "contactType", target = "contactType"),
-            @Mapping(source = "favorite", target = "favorite"),
             @Mapping(source = "value", target = "value"),
     })
     Contact contactDtoToContact(ContactDto contactDto);
@@ -24,7 +23,6 @@ public interface ContactMapper {
             @Mapping(source = "dateTime", target = "dateTime"),
             @Mapping(source = "contactType", target = "contactType"),
             @Mapping(source = "value", target = "value"),
-            @Mapping(source = "favorite", target = "favorite"),
     })
     ContactDto contactToContactDto(Contact contact);
 }
