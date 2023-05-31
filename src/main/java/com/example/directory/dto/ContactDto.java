@@ -14,7 +14,7 @@ public class ContactDto {
     @ValidUsername
     private String name;
 
-    @NotNull(message = "Surname is required.")
+    @NotNull(message = "Lastname is required.")
     @Size(max = 300, message = "The last name must be at least 300 characters long.")
     private String lastname;
 

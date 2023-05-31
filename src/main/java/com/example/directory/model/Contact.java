@@ -30,17 +30,13 @@ public class Contact {
     @JoinColumn(name = "userId")
     private UserAccount user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupId")
-    private ContactGroup group;
-
     @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorite> favorites;
 
     public Contact() {
     }
 
-    public Contact(String name, String lastname, LocalDate dateTime, ContactType contactType, String value, boolean favorite, UserAccount user, ContactGroup group, List<Favorite> favorites) {
+    public Contact(String name, String lastname, LocalDate dateTime, ContactType contactType, String value, boolean favorite, UserAccount user, List<Favorite> favorites) {
         this.name = name;
         this.lastname = lastname;
         this.dateTime = dateTime;
@@ -48,7 +44,6 @@ public class Contact {
         this.value = value;
         this.favorite = favorite;
         this.user = user;
-        this.group = group;
         this.favorites = favorites;
     }
 
@@ -123,13 +118,5 @@ public class Contact {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public ContactGroup getGroup() {
-        return group;
-    }
-
-    public void setGroup(ContactGroup group) {
-        this.group = group;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,8 +47,7 @@ public class ContactController {
 
     @PostMapping("/kontakt")
     public ResponseEntity<ContactDto> createContact(@Valid @RequestBody ContactDto contactDto, Authentication authentication) {
-        Contact contact = contactMapper.contactDtoToContact(contactDto);
-        Contact createdContact = contactService.createContact(contact, authentication);
+        Contact createdContact = contactService.createContact(contactDto, authentication);
         ContactDto createdContactDto = contactMapper.contactToContactDto(createdContact);
         return new ResponseEntity<>(createdContactDto, HttpStatus.CREATED);
     }
@@ -64,6 +64,11 @@ public class ContactController {
     public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
         contactService.deleteContactById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/contacts/grouped")
+    public Map<String, List<ContactDto>> getGroupedContacts() {
+        return contactService.groupContactsByFirstNameAndLastName();
     }
 
 }
