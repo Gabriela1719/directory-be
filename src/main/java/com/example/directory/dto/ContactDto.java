@@ -29,27 +29,15 @@ public class ContactDto {
     @NotNull
     private String value;
 
-    @NotNull
-    private boolean favorite;
-
     public ContactDto() {
     }
 
-    public ContactDto(String name, String lastname, LocalDate dateTime, ContactType contactType, String value, boolean favorite) {
+    public ContactDto(String name, String lastname, LocalDate dateTime, ContactType contactType, String value) {
         this.name = name;
         this.lastname = lastname;
         this.dateTime = dateTime;
         this.contactType = contactType;
         this.value = value;
-        this.favorite = favorite;
-    }
-
-    public boolean isFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
     }
 
     public String getName() {
