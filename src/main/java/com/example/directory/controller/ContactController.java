@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -64,6 +65,11 @@ public class ContactController {
     public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
         contactService.deleteContactById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/contacts/grouped")
+    public Map<String, List<ContactDto>> getGroupedContacts() {
+        return contactService.groupContactsByFirstNameAndLastName();
     }
 
 }

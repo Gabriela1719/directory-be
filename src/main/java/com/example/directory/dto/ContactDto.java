@@ -2,6 +2,7 @@ package com.example.directory.dto;
 
 import com.example.directory.model.ContactType;
 import com.example.directory.validation.ValidUsername;
+import com.example.directory.validation.ValueValidator;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -77,6 +78,13 @@ public class ContactDto {
     }
 
     public void setValue(String value) {
+        if (contactType == ContactType.EMAIL) {
+            ValueValidator.validateEmail(value);
+        } else if (contactType == ContactType.MOBITEL) {
+            ValueValidator.validateMobileNumber(value);
+        } else if (contactType == ContactType.FIXNI_TELEFON) {
+            ValueValidator.validateLandlineNumber(value);
+        }
         this.value = value;
     }
 }
