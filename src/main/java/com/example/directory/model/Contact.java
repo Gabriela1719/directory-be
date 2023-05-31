@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "contacts")
@@ -29,17 +30,34 @@ public class Contact {
     @JoinColumn(name = "userId")
     private UserAccount user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupId")
+    private ContactGroup group;
+
+    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favorite> favorites;
+
     public Contact() {
     }
 
-    public Contact(String name, String lastname, LocalDate dateTime, ContactType contactType, String value, UserAccount user, boolean favorite) {
+    public Contact(String name, String lastname, LocalDate dateTime, ContactType contactType, String value, boolean favorite, UserAccount user, ContactGroup group, List<Favorite> favorites) {
         this.name = name;
         this.lastname = lastname;
         this.dateTime = dateTime;
         this.contactType = contactType;
         this.value = value;
-        this.user = user;
         this.favorite = favorite;
+        this.user = user;
+        this.group = group;
+        this.favorites = favorites;
+    }
+
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
     public boolean isFavorite() {
@@ -104,5 +122,13 @@ public class Contact {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public ContactGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(ContactGroup group) {
+        this.group = group;
     }
 }

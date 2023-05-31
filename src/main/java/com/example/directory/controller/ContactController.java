@@ -34,24 +34,13 @@ public class ContactController {
         this.contactMapper = contactMapper;
     }
 
+    //CONTACTS
     @GetMapping
     public List<ContactDto> getAllContacts(Authentication authentication) {
-        String email = authentication.getName();
-        Optional<UserAccount> userOptional = userAccountRepository.findByEmail(email).stream().findFirst();
-        UserAccount currentUser = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        List<Contact> contacts = contactService.getContactsByUser(currentUser);
+        List<Contact> contacts = contactService.getContactsByUser(authentication);
         return contacts.stream()
                 .map(contactMapper::contactToContactDto)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/omiljeni")
-    public List<Favorite> getFavoriteContacts(Authentication authentication) {
-        String email = authentication.getName();
-        Optional<UserAccount> userOptional = userAccountRepository.findByEmail(email).stream().findFirst();
-        UserAccount currentUser = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return contactService.getFavoriteContacts(currentUser);
     }
 
     @GetMapping("/{id}")
@@ -93,7 +82,7 @@ public class ContactController {
         if (optionalContact.isPresent()) {
             Contact contact = optionalContact.get();
             if (contact.getUser().equals(currentUser)) {
-                contactService.toggleFavoriteStatus(contact, favorite);
+                contactService.toggleFavoriteStatus(contact);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -103,15 +92,27 @@ public class ContactController {
         }
     }
 
+    @DeleteMapping("/kontakt/{id}")
+    public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
+        contactService.deleteContactById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //FAVORITE
+
+    @GetMapping("/omiljeni")
+    public List<Favorite> getFavoriteContacts(Authentication authentication) {
+        String email = authentication.getName();
+        Optional<UserAccount> userOptional = userAccountRepository.findByEmail(email).stream().findFirst();
+        UserAccount currentUser = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return contactService.getFavoriteContacts(currentUser);
+    }
+
     @PutMapping("/detalji/{id}")
     public ResponseEntity<Contact> updateContact(@Valid @PathVariable Long id, @RequestBody ContactDto contactDto) {
         Contact updatedContact = contactService.updateContact(id, contactDto);
         return new ResponseEntity<>(updatedContact, HttpStatus.OK);
     }
 
-    @DeleteMapping("/kontakt/{id}")
-    public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
-        contactService.deleteContactById(id);
-        return ResponseEntity.noContent().build();
-    }
 }

@@ -7,9 +7,10 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "favorite")
+@SequenceGenerator(name = "favorite_sequence", sequenceName = "favorite_sequence", allocationSize = 1)
 public class Favorite {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorite_sequence")
     private Long id;
 
     private String name;
@@ -27,15 +28,30 @@ public class Favorite {
     @JoinColumn(name = "userId")
     private UserAccount user;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contactId")
+    private Contact contact;
+
     public Favorite() {
     }
 
-    public Favorite(String name, String lastname, LocalDate dateTime, ContactType contactType, String value) {
+    public Favorite(String name, String lastname, LocalDate dateTime, ContactType contactType, String value, UserAccount user, Contact contact) {
         this.name = name;
         this.lastname = lastname;
         this.dateTime = dateTime;
         this.contactType = contactType;
         this.value = value;
+        this.user = user;
+        this.contact = contact;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public Long getId() {
