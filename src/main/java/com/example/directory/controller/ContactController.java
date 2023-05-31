@@ -47,8 +47,7 @@ public class ContactController {
 
     @PostMapping("/kontakt")
     public ResponseEntity<ContactDto> createContact(@Valid @RequestBody ContactDto contactDto, Authentication authentication) {
-        Contact contact = contactMapper.contactDtoToContact(contactDto);
-        Contact createdContact = contactService.createContact(contact, authentication);
+        Contact createdContact = contactService.createContact(contactDto, authentication);
         ContactDto createdContactDto = contactMapper.contactToContactDto(createdContact);
         return new ResponseEntity<>(createdContactDto, HttpStatus.CREATED);
     }

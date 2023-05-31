@@ -11,4 +11,5 @@ import java.util.List;
 public interface ContactRepository extends JpaRepository<Contact, Long> {
     List<Contact> findByUser(UserAccount currentUser);
 
+    Contact findByValue(String contactValue);
 }
