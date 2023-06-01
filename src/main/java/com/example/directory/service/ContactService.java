@@ -3,6 +3,7 @@ package com.example.directory.service;
 import com.example.directory.dto.ContactDto;
 import com.example.directory.model.Contact;
 import com.example.directory.model.ContactType;
+import com.example.directory.model.Favorite;
 import com.example.directory.model.UserAccount;
 import com.example.directory.repository.ContactRepository;
 import com.example.directory.repository.FavoriteRepository;
@@ -81,8 +82,26 @@ public class ContactService {
         contact.setContactType(contactDto.getContactType());
         contact.setDateTime(contactDto.getDateTime());
         contact.setUser(currentUser);
+
+        boolean isFavorite = contact.isFavorite();
+        contact.setFavorite(!isFavorite);
+
+        Favorite existingFavorite = favoriteRepository.findByContact(contact);
+        if (existingFavorite != null) {
+            existingFavorite.setName(contact.getName());
+            existingFavorite.setLastname(contact.getLastname());
+            existingFavorite.setContactType(contact.getContactType());
+            existingFavorite.setValue(contact.getValue());
+            existingFavorite.setDateTime(contact.getDateTime());
+            existingFavorite.setUser(contact.getUser());
+            existingFavorite.setContact(contact);
+
+            favoriteRepository.save(existingFavorite);
+        }
+
         return contactRepository.save(contact);
     }
+
 
     public void deleteContactById(Long id) {
         favoriteRepository.deleteById(id);

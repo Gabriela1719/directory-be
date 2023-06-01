@@ -54,6 +54,7 @@ public class FavoriteService {
             Favorite existingFavorite = favoriteRepository.findByContact(contact);
             if (existingFavorite == null) {
                 Favorite favorite = new Favorite();
+                favorite.setId(contact.getId());
                 favorite.setName(contact.getName());
                 favorite.setLastname(contact.getLastname());
                 favorite.setContactType(contact.getContactType());

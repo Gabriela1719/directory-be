@@ -7,10 +7,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "favorite")
-@SequenceGenerator(name = "favorite_sequence", sequenceName = "favorite_sequence", allocationSize = 1)
 public class Favorite {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "favorite_sequence")
     private Long id;
 
     private String name;
