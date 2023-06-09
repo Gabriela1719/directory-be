@@ -12,12 +12,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/register")
+@Validated
 public class AuthController {
 
     private final UserAccountRepository userAccountRepository;
@@ -30,7 +31,7 @@ public class AuthController {
         this.userAccountMapper = userAccountMapper;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public UserAccount registerUser(@Valid @RequestBody UserAccountDto userAccountDto) {
 
         UserAccount userAccount = userAccountMapper.userDtoToUser(userAccountDto);
@@ -55,8 +56,14 @@ public class AuthController {
         response.sendRedirect("/login?logout=true");
     }
 
-    @PostMapping("/login")
-    public void login(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/adresar");
+//    @PostMapping("/login")
+//    public void login(HttpServletResponse response) throws IOException {
+//        response.sendRedirect("/adresar");
+//    }
+
+    @GetMapping("/auth")
+    public boolean isAuthenticated(HttpServletRequest request) {
+        return request.getUserPrincipal() != null;
     }
+
 }
