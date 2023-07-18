@@ -66,7 +66,7 @@ public class ContactController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/contacts/grouped")
+    @GetMapping("/kontakt/grouped")
     public Map<String, List<ContactDto>> getGroupedContacts() {
         return contactService.groupContactsByFirstNameAndLastName();
     }

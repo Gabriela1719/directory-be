@@ -2,6 +2,7 @@ package com.example.directory.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,16 +31,16 @@ public class SecurityConfig {
                 .rememberMe()
                 .and()
                 .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID")
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .and()
                 .httpBasic()
                 .and()
                 .sessionManagement()
-                    .maximumSessions(1)
-                    .expiredUrl("/login?expired=true")
+                .maximumSessions(1)
+                .expiredUrl("/login?expired=true")
                 .and()
                 .sessionFixation().newSession();
         return http.build();
@@ -53,7 +54,7 @@ public class SecurityConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000")
                         .allowCredentials(true)
-                        .allowedMethods("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                         .allowedHeaders("*");
             }
         };
