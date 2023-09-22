@@ -1,5 +1,7 @@
 package com.example.directory.controller;
 
+import com.example.directory.dto.ContactDto;
+import com.example.directory.model.Contact;
 import com.example.directory.model.Favorite;
 import com.example.directory.service.FavoriteService;
 import jakarta.validation.Valid;
@@ -7,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +32,11 @@ public class FavoriteController {
     }
 
     @GetMapping("/omiljeni")
-    public List<Favorite> getFavoriteContacts(Authentication authentication) {
-        return favoriteService.getFavoriteContacts(authentication);
+    public String getFavoriteContacts(Model model, Authentication authentication) {
+        List<Favorite> favoriteList = favoriteService.getFavoriteContacts(authentication);
+        model.addAttribute("contacts", favoriteList);
+       // model.addAttribute("contactDto", new ContactDto());
+        return "adresar/favorite";
     }
+
 }

@@ -2,17 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Contact List</title>
+    <title>Favorite Contacts</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
     <style>
         body {
             color: #000;
             overflow-x: hidden;
             height: 100%;
+            background-image: url("https://i.imgur.com/GMmCQHC.png");
             background-repeat: no-repeat;
             background-size: 100% 100%;
             padding: 0;
@@ -136,27 +135,6 @@
             font-weight: bold;
         }
 
-        .btn-custom {
-            text-transform: uppercase;
-            font-size: 15px !important;
-            font-weight: 400;
-            height: 43px;
-            cursor: pointer;
-            border: 1px solid #00BCD4;
-            background-color: #00BCD4;
-            color: #fff;
-        }
-
-        .btn-custom:hover {
-            background-color: #00BCD4;
-            border: 1px solid #02a3b7;
-            color: aliceblue;
-        }
-
-        .form-group {
-            padding-top: 20px;
-        }
-
         .pagination {
             margin: 20px 0;
             text-align: center;
@@ -195,15 +173,6 @@
             outline: none;
         }
 
-        .bi-trash {
-            font-size: larger;
-            font-weight: lighter;
-        }
-
-        .bi-suit-heart-fill {
-            color: #dc3545;
-        }
-
         select:invalid { color: gray; }
 
 
@@ -212,93 +181,17 @@
 <body>
 <div class="navbar" style="font-family: Arial, sans-serif;">
     <a href="/adresar">Contacts</a>
-    <a href="/omiljeni">Favotire</a>
+    <a href="/omiljeni">Favorite</a>
     <div class="logout-link">
         <a href="/logout"><i class="bi bi-box-arrow-right"></i></a>
     </div>
 </div>
 <div class="container" style="font-family: Arial, sans-serif;">
     <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="blue-text"><i class="bi bi-person-plus-fill"></i> Create New Contact</h5>
-                </div>
-                <div id="success-message" class="alert alert-success" style="display: none;">
-                    Contact created successfully!
-                </div>
-                <div class="card-body">
-                    <form method="POST" th:action="@{/adresar/kontakt}" th:object="${contactDto}">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input id="name" class="form-control" name="name" placeholder="First Name" required
-                                   th:field="*{name}" type="text"/>
-                            <div class="text-danger" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="lastname">Last Name</label>
-                            <input id="lastname" class="form-control" name="lastname" placeholder="Last Name" required
-                                   th:field="*{lastname}"
-                                   type="text"/>
-                            <small class="text-danger" th:errors="*{lastname}"
-                                   th:if="${#fields.hasErrors('lastname')}"></small>
-                            <div class="text-danger" th:errors="*{lastname}"
-                                 th:if="${#fields.hasErrors('lastname')}"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="country">Country</label>
-                            <select id="country" class="form-control" name="country" required th:field="*{country}">
-                                <option value="" disabled selected>Select Country</option>
-                                <option value="Country 1">Country 1</option>
-                                <option value="Country 2">Country 2</option>
-                            </select>
-                            <small class="text-danger" th:errors="*{country}"
-                                   th:if="${#fields.hasErrors('country')}"></small>
-                            <div class="text-danger" th:errors="*{country}"
-                                 th:if="${#fields.hasErrors('country')}"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="contactType">Contact Type</label>
-                            <select id="contactType" class="form-control" name="contactType" required
-                                    th:field="*{contactType}">
-                                <option value="" disabled selected>Select Type</option>
-                                <option value="MOBITEL">MOBITEL</option>
-                                <option value="FIXNI_TELEFON">FIXNI TELEFON</option>
-                                <option value="EMAIL">EMAIL</option>
-                                <option value="PAGER">PAGER</option>
-                            </select>
-                            <small class="text-danger" th:errors="*{contactType}"
-                                   th:if="${#fields.hasErrors('contactType')}"></small>
-                            <div class="text-danger" th:errors="*{contactType}"
-                                 th:if="${#fields.hasErrors('contactType')}"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="value">Value</label>
-                            <input id="value" class="form-control" name="value" placeholder="Value" required
-                                   th:field="*{value}"
-                                   type="text"/>
-                            <small class="text-danger" th:errors="*{value}"
-                                   th:if="${#fields.hasErrors('value')}"></small>
-                            <div class="text-danger" th:errors="*{value}" th:if="${#fields.hasErrors('value')}"></div>
-                        </div>
-
-                        <div class="form-group text-center">
-                            <button class="btn btn-custom" type="submit">Create Contact</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 card">
+        <div class="col-md-12 card">
             <div class="card-header">
-                <h5 class="blue-text"><i class="bi bi-person-lines-fill"></i> Contact List</h5>
+                <h5 class="blue-text"><i class="bi bi-person-lines-fill"></i> Favorite Contacts List</h5>
             </div>
-            <!--Searchbar-->
-            <!--pagination-->
             <div class="table-container">
                 <div class="row">
                     <div class="col-9">
@@ -317,10 +210,10 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
-
-                <table id="contact-table" class="table">
+                </div>
+            <div class="table-container">
+                <table class="table">
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -328,12 +221,9 @@
                         <th>Country</th>
                         <th>Contact Type</th>
                         <th>Value</th>
-                        <th>Favorite</th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-
                     <tr th:each="contact : ${contacts}" th:id="'contact-' + ${contact.id}">
                         <td th:text="${contact.name}"></td>
                         <td th:text="${contact.lastname}"></td>
@@ -347,14 +237,6 @@
                             <span class="badge badge-pager" th:if="${contact.contactType == contact.contactType.PAGER}">PAGER</span>
                         </td>
                         <td th:text="${contact.value}"></td>
-                        <td>
-                            <i th:if="${contact.favorite}" class="bi bi-suit-heart-fill" th:attr="onclick='updateContact(\'' + ${contact.id} + '\')'"></i>
-                            <i th:unless="${contact.favorite}" class="bi bi-suit-heart" th:attr="onclick='updateContact(\'' + ${contact.id} + '\')'"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-trash" th:attr="onclick='deleteContact(\'' + ${contact.id} + '\')'"></i>
-                        </td>
 
                     </tr>
                     </tbody>
@@ -364,7 +246,6 @@
     </div>
 </div>
 <script>
-
     const contactsPerPage = 7;
     let currentPage = 1;
     const contacts = document.querySelectorAll("#contact-table tbody tr");
@@ -446,53 +327,7 @@
             contact.style.display = "";
         });
     }
-
-    function deleteContact(contactId) {
-        const confirmation = confirm("Are you sure you want to delete this contact?");
-        if (confirmation) {
-            // Send an AJAX request to delete the contact
-            fetch(`/adresar/kontakt/${contactId}`, {
-                method: "DELETE",
-            })
-                .then(response => {
-                    if (response.status === 204) {
-                        const contactRow = document.getElementById(`contact-${contactId}`);
-                        if (contactRow) {
-                            contactRow.remove();
-                        }
-                    } else {
-                        alert("Error deleting contact.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error deleting contact:", error);
-                });
-        }
-    }
-
-    function updateContact(contactId) {
-        const updatedData = {
-            favorite: true,
-        };
-        fetch(`${contactId}/favorite`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updatedData),
-        })
-            .then(response => {
-                if (response.status === 204) {
-                    console.log("Contact added to favorite list successfully.");
-                    location.reload();
-                } else {
-                    alert("Error updating contact.");
-                }
-            })
-            .catch(error => {
-                console.error("Error updating contact:", error);
-            });
-    }
 </script>
 </body>
+
 </html>
