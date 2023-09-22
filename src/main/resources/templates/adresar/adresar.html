@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            color: #000;
+            overflow-x: hidden;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar {
+            background-color: #00BCD4;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+            margin-right: 20px;
+            font-weight: lighter;
+        }
+
+        .navbar a:hover {
+            color: #00708c;
+        }
+
+        .logout-link {
+            margin-left: auto;
+        }
+
+        .card-header {
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            position: relative;
+        }
+
+        .card {
+            border: none !important;
+            box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
+            padding: 30px 40px;
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .table-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #dddddd;
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .blue-text {
+            color: #00BCD4;
+        }
+
+        .badge-mobitel {
+            background-color: #e65100;
+            color: #fff;
+        }
+
+        .badge-fixni-telefon {
+            background-color: #009688;
+            color: #fff;
+        }
+
+        .badge-email {
+            background-color: #0099CC;
+            color: #fff;
+        }
+
+        .badge-pager {
+            background-color: #9933CC;
+            color: #fff;
+        }
+
+        .bi-box-arrow-right {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-custom {
+            text-transform: uppercase;
+            font-size: 15px !important;
+            font-weight: 400;
+            height: 43px;
+            cursor: pointer;
+            border: 1px solid #00BCD4;
+            background-color: #00BCD4;
+            color: #fff;
+        }
+
+        .btn-custom:hover {
+            background-color: #00BCD4;
+            border: 1px solid #02a3b7;
+            color: aliceblue;
+        }
+
+        .form-group {
+            padding-top: 20px;
+        }
+
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .pagination a {
+            color: #00BCD4;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: 1px solid #00BCD4;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #00BCD4;
+            color: white;
+        }
+
+
+        .search-container {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .search-container input[type="text"] {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: #00BCD4;
+            outline: none;
+        }
+
+        .bi-trash {
+            font-size: larger;
+            font-weight: lighter;
+        }
+
+        select:invalid { color: gray; }
+
+    </style>
+</head>
+<body>
+<div class="navbar" style="font-family: Arial, sans-serif;">
+    <a href="#">Contacts</a>
+    <a href="#">Favotire</a>
+    <div class="logout-link">
+        <a href="/logout"><i class="bi bi-box-arrow-right"></i></a>
+    </div>
+</div>
+<div class="container" style="font-family: Arial, sans-serif;">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="blue-text"><i class="bi bi-person-plus-fill"></i> Create New Contact</h5>
+                </div>
+                <div id="success-message" class="alert alert-success" style="display: none;">
+                    Contact created successfully!
+                </div>
+                <div class="card-body">
+                    <form method="POST" th:action="@{/adresar/kontakt}" th:object="${contactDto}">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input id="name" class="form-control" name="name" placeholder="First Name" required
+                                   th:field="*{name}" type="text"/>
+                            <div class="text-danger" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input id="lastname" class="form-control" name="lastname" placeholder="Last Name" required
+                                   th:field="*{lastname}"
+                                   type="text"/>
+                            <small class="text-danger" th:errors="*{lastname}"
+                                   th:if="${#fields.hasErrors('lastname')}"></small>
+                            <div class="text-danger" th:errors="*{lastname}"
+                                 th:if="${#fields.hasErrors('lastname')}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <select id="country" class="form-control" name="country" required th:field="*{country}">
+                                <option value="" disabled selected>Select Country</option>
+                                <option value="Country 1">Country 1</option>
+                                <option value="Country 2">Country 2</option>
+                            </select>
+                            <small class="text-danger" th:errors="*{country}"
+                                   th:if="${#fields.hasErrors('country')}"></small>
+                            <div class="text-danger" th:errors="*{country}"
+                                 th:if="${#fields.hasErrors('country')}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactType">Contact Type</label>
+                            <select id="contactType" class="form-control" name="contactType" required
+                                    th:field="*{contactType}">
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="MOBITEL">MOBITEL</option>
+                                <option value="FIXNI_TELEFON">FIXNI TELEFON</option>
+                                <option value="EMAIL">EMAIL</option>
+                                <option value="PAGER">PAGER</option>
+                            </select>
+                            <small class="text-danger" th:errors="*{contactType}"
+                                   th:if="${#fields.hasErrors('contactType')}"></small>
+                            <div class="text-danger" th:errors="*{contactType}"
+                                 th:if="${#fields.hasErrors('contactType')}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="value">Value</label>
+                            <input id="value" class="form-control" name="value" placeholder="Value" required
+                                   th:field="*{value}"
+                                   type="text"/>
+                            <small class="text-danger" th:errors="*{value}"
+                                   th:if="${#fields.hasErrors('value')}"></small>
+                            <div class="text-danger" th:errors="*{value}" th:if="${#fields.hasErrors('value')}"></div>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button class="btn btn-custom" type="submit">Create Contact</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 card">
+            <div class="card-header">
+                <h5 class="blue-text"><i class="bi bi-person-lines-fill"></i> Contact List</h5>
+            </div>
+            <!--Searchbar-->
+
+            <!--pagination-->
+            <div class="table-container">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="search-container">
+                            <input id="search" oninput="searchContacts()" placeholder="Search for contacts..."
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="pagination justify-content-end">
+                            <a id="prevPage" aria-disabled="true" class="page-link" tabindex="-1">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                            <a id="nextPage" class="page-link">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <table id="contact-table" class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Last Name</th>
+                        <th>Country</th>
+                        <th>Contact Type</th>
+                        <th>Value</th>
+                        <th>Favorite</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr th:each="contact : ${contacts}" th:id="'contact-' + ${contact.id}">
+                        <td th:text="${contact.name}"></td>
+                        <td th:text="${contact.lastname}"></td>
+                        <td th:text="${contact.country}"></td>
+                        <td>
+                            <span class="badge badge-mobitel"
+                                  th:if="${contact.contactType == contact.contactType.MOBITEL}">MOBITEL</span>
+                            <span class="badge badge-fixni-telefon"
+                                  th:if="${contact.contactType == contact.contactType.FIXNI_TELEFON}">FIXNI TELEFON</span>
+                            <span class="badge badge-email" th:if="${contact.contactType == contact.contactType.EMAIL}">EMAIL</span>
+                            <span class="badge badge-pager" th:if="${contact.contactType == contact.contactType.PAGER}">PAGER</span>
+                        </td>
+                        <td th:text="${contact.value}"></td>
+                        <td>
+                            <span id="favorite-icon-${contact.id}" class="favorite-icon" th:class="${contact.favorite ? 'bi-heart-fill text-danger' : 'bi-heart text-secondary'}" onclick="toggleFavorite(${contact.id})"></span>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-trash" th:attr="onclick='deleteContact(\'' + ${contact.id} + '\')'"></i>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const contactsPerPage = 7;
+    let currentPage = 1;
+    const contacts = document.querySelectorAll("#contact-table tbody tr");
+    const pageCount = Math.ceil(contacts.length / contactsPerPage);
+
+    function displayContacts() {
+        contacts.forEach(contact => {
+            contact.style.display = "none";
+        });
+
+        const startIndex = (currentPage - 1) * contactsPerPage;
+        const endIndex = startIndex + contactsPerPage;
+
+        for (let i = startIndex; i < endIndex && i < contacts.length; i++) {
+            contacts[i].style.display = "";
+        }
+
+        const prevPage = document.getElementById("prevPage");
+        const nextPage = document.getElementById("nextPage");
+
+        prevPage.classList.toggle("disabled", currentPage === 1);
+        nextPage.classList.toggle("disabled", currentPage === pageCount);
+    }
+
+    function goToPreviousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            displayContacts();
+        }
+    }
+
+    function goToNextPage() {
+        if (currentPage < pageCount) {
+            currentPage++;
+            displayContacts();
+        }
+    }
+
+    document.getElementById("prevPage").addEventListener("click", goToPreviousPage);
+    document.getElementById("nextPage").addEventListener("click", goToNextPage);
+
+    displayContacts();
+
+    //searchbar
+
+    function searchContacts() {
+        const searchInput = document.getElementById("search");
+        const searchTerm = searchInput.value.toLowerCase();
+
+        // If the search term is empty, reset the table to its initial state
+        if (searchTerm === "") {
+            currentPage = 1;
+            displayContacts();
+            return;
+        }
+
+        // Filter the contacts based on the search query
+        const filteredContacts = Array.from(contacts).filter(contact => {
+            const name = contact.querySelector("td:nth-child(1)").textContent.toLowerCase();
+            const lastName = contact.querySelector("td:nth-child(2)").textContent.toLowerCase();
+            const country = contact.querySelector("td:nth-child(3)").textContent.toLowerCase();
+            const contactType = contact.querySelector("td:nth-child(4)").textContent.toLowerCase();
+            const value = contact.querySelector("td:nth-child(5)").textContent.toLowerCase();
+
+            return (
+                name.includes(searchTerm) ||
+                lastName.includes(searchTerm) ||
+                country.includes(searchTerm) ||
+                contactType.includes(searchTerm) ||
+                value.includes(searchTerm)
+            );
+        });
+
+        contacts.forEach(contact => {
+            contact.style.display = "none";
+        });
+
+        filteredContacts.forEach(contact => {
+            contact.style.display = "";
+        });
+    }
+
+    function deleteContact(contactId) {
+        const confirmation = confirm("Are you sure you want to delete this contact?");
+        if (confirmation) {
+            // Send an AJAX request to delete the contact
+            fetch(`/adresar/kontakt/${contactId}`, {
+                method: "DELETE",
+            })
+                .then(response => {
+                    if (response.status === 204) {
+                        const contactRow = document.getElementById(`contact-${contactId}`);
+                        if (contactRow) {
+                            contactRow.remove();
+                        }
+                    } else {
+                        alert("Error deleting contact.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error deleting contact:", error);
+                });
+        }
+    }
+
+    function toggleFavorite(contactId) {
+        const favoriteIcon = document.getElementById(`favorite-icon-${contactId}`);
+
+        fetch(`/${contactId}/favorite`, {
+            method: "PUT",
+        })
+            .then(response => {
+                if (response.status === 204) {
+                    // Toggle the heart icon based on the response
+                    if (favoriteIcon.classList.contains("bi-heart-fill")) {
+                        favoriteIcon.classList.remove("bi-heart-fill", "text-danger");
+                        favoriteIcon.classList.add("bi-heart", "text-secondary");
+                    } else {
+                        favoriteIcon.classList.remove("bi-heart", "text-secondary");
+                        favoriteIcon.classList.add("bi-heart-fill", "text-danger");
+                    }
+                } else {
+                    alert("Error toggling favorite status.");
+                }
+            })
+            .catch(error => {
+                console.error("Error toggling favorite status:", error);
+            });
+    }
+
+
+
+</script>
+</body>
+</html>

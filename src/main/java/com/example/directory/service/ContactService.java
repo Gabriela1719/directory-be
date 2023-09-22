@@ -65,7 +65,7 @@ public class ContactService {
         Contact contact = new Contact();
         contact.setName(contactDto.getName());
         contact.setLastname(contactDto.getLastname());
-        contact.setDateTime(contactDto.getDateTime());
+        contact.setCountry(contactDto.getCountry());
         contact.setContactType(contactDto.getContactType());
         contact.setValue(contactDto.getValue());
         contact.setUser(currentUser);
@@ -80,7 +80,7 @@ public class ContactService {
         contact.setLastname(contactDto.getLastname());
         contact.setValue(contactDto.getValue());
         contact.setContactType(contactDto.getContactType());
-        contact.setDateTime(contactDto.getDateTime());
+        contact.setCountry(contactDto.getCountry());
         contact.setUser(currentUser);
 
         boolean isFavorite = contact.isFavorite();
@@ -92,7 +92,7 @@ public class ContactService {
             existingFavorite.setLastname(contact.getLastname());
             existingFavorite.setContactType(contact.getContactType());
             existingFavorite.setValue(contact.getValue());
-            existingFavorite.setDateTime(contact.getDateTime());
+            existingFavorite.setCountry(contact.getCountry());
             existingFavorite.setUser(contact.getUser());
             existingFavorite.setContact(contact);
 
@@ -115,7 +115,7 @@ public class ContactService {
 
         for (Contact contact : contacts) {
             String key = contact.getName() + " " + contact.getLastname();
-            ContactDto contactDto = new ContactDto(contact.getName(), contact.getLastname(), contact.getDateTime(), contact.getContactType(), contact.getValue()); // Replace with the appropriate fields of ContactDto
+            ContactDto contactDto = new ContactDto(contact.getName(), contact.getLastname(), contact.getCountry(), contact.getContactType(), contact.getValue()); // Replace with the appropriate fields of ContactDto
             groupedContacts.computeIfAbsent(key, k -> new ArrayList<>()).add(contactDto);
         }
 

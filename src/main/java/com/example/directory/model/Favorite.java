@@ -3,8 +3,6 @@ package com.example.directory.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "favorite")
 public class Favorite {
@@ -15,7 +13,7 @@ public class Favorite {
 
     private String lastname;
 
-    private LocalDate dateTime;
+    private String country;
 
     private ContactType contactType;
 
@@ -34,10 +32,10 @@ public class Favorite {
     public Favorite() {
     }
 
-    public Favorite(String name, String lastname, LocalDate dateTime, ContactType contactType, String value, UserAccount user, Contact contact) {
+    public Favorite(String name, String lastname, String country, ContactType contactType, String value, UserAccount user, Contact contact) {
         this.name = name;
         this.lastname = lastname;
-        this.dateTime = dateTime;
+        this.country = country;
         this.contactType = contactType;
         this.value = value;
         this.user = user;
@@ -76,12 +74,12 @@ public class Favorite {
         this.lastname = lastname;
     }
 
-    public LocalDate getDateTime() {
-        return dateTime;
+    public String getCountry() {
+        return country;
     }
 
-    public void setDateTime(LocalDate dateTime) {
-        this.dateTime = dateTime;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public ContactType getContactType() {
