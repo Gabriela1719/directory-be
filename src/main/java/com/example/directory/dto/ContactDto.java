@@ -6,9 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 
 public class ContactDto {
     @ValidUsername
@@ -18,9 +15,8 @@ public class ContactDto {
     @Size(max = 300, message = "The last name must be at least 300 characters long.")
     private String lastname;
 
-    @NotNull(message = "Date is required.")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate dateTime;
+    @NotNull(message = "Country is required.")
+    private String country;
 
     @NotNull(message = "ContactType is required.")
     @Enumerated(EnumType.STRING)
@@ -32,10 +28,10 @@ public class ContactDto {
     public ContactDto() {
     }
 
-    public ContactDto(String name, String lastname, LocalDate dateTime, ContactType contactType, String value) {
+    public ContactDto(String name, String lastname, String country, ContactType contactType, String value) {
         this.name = name;
         this.lastname = lastname;
-        this.dateTime = dateTime;
+        this.country = country;
         this.contactType = contactType;
         this.value = value;
     }
@@ -56,12 +52,12 @@ public class ContactDto {
         this.lastname = lastname;
     }
 
-    public LocalDate getDateTime() {
-        return dateTime;
+    public String getCountry() {
+        return country;
     }
 
-    public void setDateTime(LocalDate dateTime) {
-        this.dateTime = dateTime;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public ContactType getContactType() {

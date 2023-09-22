@@ -59,7 +59,7 @@ public class FavoriteService {
                 favorite.setLastname(contact.getLastname());
                 favorite.setContactType(contact.getContactType());
                 favorite.setValue(contact.getValue());
-                favorite.setDateTime(contact.getDateTime());
+                favorite.setCountry(contact.getCountry());
                 favorite.setUser(contact.getUser());
                 favorite.setContact(contact);
 

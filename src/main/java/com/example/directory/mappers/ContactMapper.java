@@ -11,7 +11,7 @@ public interface ContactMapper {
     @Mappings({
             @Mapping(source = "name", target = "name"),
             @Mapping(source = "lastname", target = "lastname"),
-            @Mapping(source = "dateTime", target = "dateTime"),
+            @Mapping(source = "country", target = "country"),
             @Mapping(source = "contactType", target = "contactType"),
             @Mapping(source = "value", target = "value"),
     })
@@ -20,7 +20,7 @@ public interface ContactMapper {
     @Mappings({
             @Mapping(source = "name", target = "name"),
             @Mapping(source = "lastname", target = "lastname"),
-            @Mapping(source = "dateTime", target = "dateTime"),
+            @Mapping(source = "country", target = "country"),
             @Mapping(source = "contactType", target = "contactType"),
             @Mapping(source = "value", target = "value"),
     })
