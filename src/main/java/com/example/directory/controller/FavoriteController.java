@@ -35,7 +35,7 @@ public class FavoriteController {
     public String getFavoriteContacts(Model model, Authentication authentication) {
         List<Favorite> favoriteList = favoriteService.getFavoriteContacts(authentication);
         model.addAttribute("contacts", favoriteList);
-       // model.addAttribute("contactDto", new ContactDto());
+        model.addAttribute("contactDto", new ContactDto());
         return "adresar/favorite";
     }
 
