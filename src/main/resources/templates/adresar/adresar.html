@@ -162,6 +162,12 @@
             text-align: center;
         }
 
+        .number {
+            margin: 30px 0 0 10px;
+            text-align: center;
+            font-size: small;
+        }
+
         .pagination a {
             color: #00BCD4;
             text-decoration: none;
@@ -203,9 +209,6 @@
         .bi-suit-heart-fill {
             color: #dc3545;
         }
-
-        select:invalid { color: gray; }
-
 
     </style>
 </head>
@@ -250,9 +253,7 @@
                         <div class="form-group">
                             <label for="country">Country</label>
                             <select id="country" class="form-control" name="country" required th:field="*{country}">
-                                <option value="" disabled selected>Select Country</option>
-                                <option value="Country 1">Country 1</option>
-                                <option value="Country 2">Country 2</option>
+                                <option value="Select Country" selected></option>
                             </select>
                             <small class="text-danger" th:errors="*{country}"
                                    th:if="${#fields.hasErrors('country')}"></small>
@@ -264,7 +265,7 @@
                             <label for="contactType">Contact Type</label>
                             <select id="contactType" class="form-control" name="contactType" required
                                     th:field="*{contactType}">
-                                <option value="" disabled selected>Select Type</option>
+                                <option value="" selected></option>
                                 <option value="MOBITEL">MOBITEL</option>
                                 <option value="FIXNI_TELEFON">FIXNI TELEFON</option>
                                 <option value="EMAIL">EMAIL</option>
@@ -287,7 +288,7 @@
                         </div>
 
                         <div class="form-group text-center">
-                            <button class="btn btn-custom" type="submit">Create Contact</button>
+                            <button class="btn btn-custom" type="submit" onchange="clearForm()">Create Contact</button>
                         </div>
                     </form>
                 </div>
@@ -301,11 +302,14 @@
             <!--pagination-->
             <div class="table-container">
                 <div class="row">
-                    <div class="col-9">
+                    <div class="col-7">
                         <div class="search-container">
-                            <input id="search" oninput="searchContacts()" placeholder="Search for contacts..."
+                            <input id="search" oninput="searchContacts()" placeholder="Search contacts..."
                                    type="text">
                         </div>
+                    </div>
+                    <div class="col number">
+                        <p id="total-contacts"></p>
                     </div>
                     <div class="col-3">
                         <div class="pagination justify-content-end">
@@ -365,7 +369,7 @@
 </div>
 <script>
 
-    const contactsPerPage = 7;
+    const contactsPerPage = 6;
     let currentPage = 1;
     const contacts = document.querySelectorAll("#contact-table tbody tr");
     const pageCount = Math.ceil(contacts.length / contactsPerPage);
@@ -387,6 +391,9 @@
 
         prevPage.classList.toggle("disabled", currentPage === 1);
         nextPage.classList.toggle("disabled", currentPage === pageCount);
+
+        const totalContactsElement = document.getElementById("total-contacts");
+        totalContactsElement.textContent = `Total Contacts: ${contacts.length}`;
     }
 
     function goToPreviousPage() {
@@ -492,6 +499,28 @@
             .catch(error => {
                 console.error("Error updating contact:", error);
             });
+    }
+
+    //Countries list
+
+    fetch('/countries')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('country').innerHTML = '';
+            data.forEach(country => {
+                var option = document.createElement('option');
+                option.value = country.name;
+                option.text = country.name;
+                document.getElementById('country').appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching JSON:', error));
+
+
+    //Clear form
+    function clearForm() {
+        const form = document.querySelector('form');
+        form.reset();
     }
 </script>
 </body>

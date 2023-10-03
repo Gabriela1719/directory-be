@@ -1,7 +1,6 @@
 package com.example.directory.controller;
 
 import com.example.directory.dto.ContactDto;
-import com.example.directory.model.Contact;
 import com.example.directory.model.Favorite;
 import com.example.directory.service.FavoriteService;
 import jakarta.validation.Valid;
@@ -11,7 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
