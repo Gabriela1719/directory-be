@@ -57,7 +57,7 @@ public class ContactService {
         validateContactDto(contactDto);
 
         String contactValue = contactDto.getValue();
-        Contact existingContact = contactRepository.findByValue(contactValue);
+        Contact existingContact = contactRepository.findByValueAndUser(contactValue, currentUser);
 
         if (existingContact != null) {
             throw new RuntimeException("Value already exists");

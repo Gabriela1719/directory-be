@@ -5,6 +5,7 @@
     <title>Contact List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
@@ -126,10 +127,6 @@
             color: #fff;
         }
 
-        .badge-pager {
-            background-color: #9933CC;
-            color: #fff;
-        }
 
         .bi-box-arrow-right {
             font-size: 20px;
@@ -269,7 +266,6 @@
                                 <option value="MOBITEL">MOBITEL</option>
                                 <option value="FIXNI_TELEFON">FIXNI TELEFON</option>
                                 <option value="EMAIL">EMAIL</option>
-                                <option value="PAGER">PAGER</option>
                             </select>
                             <small class="text-danger" th:errors="*{contactType}"
                                    th:if="${#fields.hasErrors('contactType')}"></small>
@@ -327,18 +323,19 @@
                 <table id="contact-table" class="table">
                     <thead>
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>Last Name</th>
                         <th>Country</th>
                         <th>Contact Type</th>
                         <th>Value</th>
-                        <th>Favorite</th>
+                        <th></th>
                         <th></th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    <tr th:each="contact : ${contacts}" th:id="'contact-' + ${contact.id}">
+                    <tr th:each="contact, iterStat : ${contacts}" th:id="'contact-' + ${contact.id}" data-group="${contact.name}-${contact.lastname}">
                         <td th:text="${contact.name}"></td>
                         <td th:text="${contact.lastname}"></td>
                         <td th:text="${contact.country}"></td>
@@ -348,16 +345,15 @@
                             <span class="badge badge-fixni-telefon"
                                   th:if="${contact.contactType == contact.contactType.FIXNI_TELEFON}">FIXNI TELEFON</span>
                             <span class="badge badge-email" th:if="${contact.contactType == contact.contactType.EMAIL}">EMAIL</span>
-                            <span class="badge badge-pager" th:if="${contact.contactType == contact.contactType.PAGER}">PAGER</span>
                         </td>
                         <td th:text="${contact.value}"></td>
                         <td>
-                            <i th:if="${contact.favorite}" class="bi bi-suit-heart-fill" th:attr="onclick='updateContact(\'' + ${contact.id} + '\')'"></i>
-                            <i th:unless="${contact.favorite}" class="bi bi-suit-heart" th:attr="onclick='updateContact(\'' + ${contact.id} + '\')'"></i>
+                            <i th:if="${contact.favorite}" data-toggle="tooltip" title="Remove from Favorites" class="bi bi-suit-heart-fill" th:attr="onclick='updateContact(\'' + ${contact.id} + '\')'"></i>
+                            <i th:unless="${contact.favorite}" data-toggle="tooltip" title="Add to Favorites" class="bi bi-suit-heart" th:attr="onclick='updateContact(\'' + ${contact.id} + '\')'"></i>
                         </td>
 
                         <td>
-                            <i class="bi bi-trash" th:attr="onclick='deleteContact(\'' + ${contact.id} + '\')'"></i>
+                            <i data-toggle="tooltip" title="Delete" class="bi bi-trash" th:attr="onclick='deleteContact(\'' + ${contact.id} + '\')'"></i>
                         </td>
 
                     </tr>
@@ -457,16 +453,12 @@
     function deleteContact(contactId) {
         const confirmation = confirm("Are you sure you want to delete this contact?");
         if (confirmation) {
-            // Send an AJAX request to delete the contact
             fetch(`/adresar/kontakt/${contactId}`, {
                 method: "DELETE",
             })
                 .then(response => {
                     if (response.status === 204) {
-                        const contactRow = document.getElementById(`contact-${contactId}`);
-                        if (contactRow) {
-                            contactRow.remove();
-                        }
+                        location.reload();
                     } else {
                         alert("Error deleting contact.");
                     }
@@ -476,6 +468,7 @@
                 });
         }
     }
+
 
     function updateContact(contactId) {
         const updatedData = {
@@ -517,11 +510,113 @@
         .catch(error => console.error('Error fetching JSON:', error));
 
 
-    //Clear form
+    //expand collapse
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const groupedContacts = {};
+
+        document.querySelectorAll("#contact-table tbody tr").forEach(contactRow => {
+            const name = contactRow.querySelector("td:nth-child(1)").textContent;
+            const lastName = contactRow.querySelector("td:nth-child(2)").textContent;
+            const key = `${name}-${lastName}`;
+
+            if (!groupedContacts[key]) {
+                groupedContacts[key] = [];
+            }
+            groupedContacts[key].push(contactRow);
+        });
+
+        Object.keys(groupedContacts).forEach(key => {
+            const group = groupedContacts[key];
+            if (group.length > 1) {
+                group.slice(1).forEach(contactRow => {
+                    contactRow.style.display = "none";
+                    const emptyTd = document.createElement("td");
+                    contactRow.insertBefore(emptyTd, contactRow.firstChild);
+                });
+
+                const expandCollapseIcon = document.createElement("i");
+                expandCollapseIcon.classList.add("bi", "bi-plus-square", "expand-icon");
+                expandCollapseIcon.addEventListener("click", () => {
+                    group.slice(1).forEach(contactRow => {
+                        contactRow.style.display = contactRow.style.display === "none" ? "" : "none";
+                    });
+                    expandCollapseIcon.classList.toggle("bi-plus-square");
+                    expandCollapseIcon.classList.toggle("bi-dash-square");
+                });
+
+                const expandCollapseCell = document.createElement("td");
+                expandCollapseCell.appendChild(expandCollapseIcon);
+
+                const firstContactRow = group[0];
+                firstContactRow.insertBefore(expandCollapseCell, firstContactRow.firstChild);
+                firstContactRow.style.cursor = "pointer";
+
+            } else if (group.length === 1) {
+                const singleContactRow = group[0];
+                const emptyCell = document.createElement("td");
+                emptyCell.style.paddingLeft = "20px";
+                singleContactRow.insertBefore(emptyCell, singleContactRow.firstChild);
+                singleContactRow.style.cursor = "pointer";
+            }
+        });
+    });
+
+    //clear form
+    function displaySuccessMessage(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'alert alert-success';
+        successDiv.style.width = '290px';
+        successDiv.style.height = '60px';
+        successDiv.style.marginTop = '10px';
+        successDiv.style.marginBottom = '10px';
+        const successParagraph = document.createElement('p');
+        successParagraph.textContent = message;
+        successDiv.appendChild(successParagraph);
+
+        const form = document.querySelector('form');
+        form.insertAdjacentElement('afterend', successDiv);
+
+        setTimeout(function() {
+            successDiv.remove();
+        }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = localStorage.getItem('successMessage');
+
+        if (successMessage) {
+            displaySuccessMessage(successMessage);
+            localStorage.removeItem('successMessage');
+        }
+    });
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(document.querySelector('form'));
+
+        fetch('/adresar/kontakt', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    clearForm();
+                    window.location.href = '/adresar';
+                    localStorage.setItem('successMessage', 'Contact created successfully!');
+                } else {
+                    console.error('Greška prilikom spremanja kontakta.');
+                }
+            })
+            .catch(error => {
+                console.error('Greška prilikom slanja zahtjeva na server:', error);
+            });
+    });
     function clearForm() {
         const form = document.querySelector('form');
         form.reset();
     }
+
 </script>
 </body>
 </html>

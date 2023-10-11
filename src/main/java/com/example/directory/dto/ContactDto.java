@@ -9,10 +9,11 @@ import jakarta.validation.constraints.Size;
 
 public class ContactDto {
     @ValidUsername
+    @NotNull
     private String name;
 
     @NotNull(message = "Lastname is required.")
-    @Size(max = 300, message = "The last name must be at least 300 characters long.")
+    @Size(min = 3, max = 20, message = "The last name must be between 3 and 18 characters long.")
     private String lastname;
 
     @NotNull(message = "Country is required.")

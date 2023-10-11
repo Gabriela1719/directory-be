@@ -66,9 +66,12 @@ public class ContactController {
 //    }
 
     @PostMapping("/kontakt")
-    public String createContact(@ModelAttribute("contactDto") @Valid ContactDto contactDto,
+    public String createContact(@Valid @ModelAttribute("contactDto") ContactDto contactDto, Contact contact,
                                 BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("errorMessages", bindingResult.getAllErrors());
+            List<Contact> contacts = contactService.getContactsByUser(authentication);
+            model.addAttribute("contacts", contacts);
             return "adresar/adresar";
         }
 
