@@ -411,14 +411,12 @@
         const searchInput = document.getElementById("search");
         const searchTerm = searchInput.value.toLowerCase();
 
-        // If the search term is empty, reset the table to its initial state
         if (searchTerm === "") {
             currentPage = 1;
             displayContacts();
             return;
         }
 
-        // Filter the contacts based on the search query
         const filteredContacts = Array.from(contacts).filter(contact => {
             const name = contact.querySelector("td:nth-child(1)").textContent.toLowerCase();
             const lastName = contact.querySelector("td:nth-child(2)").textContent.toLowerCase();
@@ -623,25 +621,21 @@
                 errorElement.style.marginTop = '10px';
                 errorElement.style.marginBottom = '10px';
 
-                // Filtriraj poruku o grešci
                 let errorMessage = error;
 
-                // Ako poruka sadrži ": ", uzmi samo tekst poruke o grešci
                 if (error.includes(': ')) {
                     const parts = error.split(': ');
                     errorMessage = parts.slice(1).join(': ');
                 }
 
-                // Ako poruka sadrži "createContact.contactDto.name", zameni je praznim stringom
                 errorMessage = errorMessage.replace('createContact.contactDto.name: ', '');
                 errorMessage = errorMessage.replace('createContact.contactDto.lastname: ', '');
 
                 const errorMessageLines = errorMessage.split(/\n/);
 
-                // Dodaj svaku liniju kao novi div element
                 errorMessageLines.forEach(line => {
                     const lineElement = document.createElement('div');
-                    lineElement.textContent = line.trim(); // Ukloni prazne prostore sa početka i kraja linije
+                    lineElement.textContent = line.trim();
                     errorElement.appendChild(lineElement);
                 });
 
