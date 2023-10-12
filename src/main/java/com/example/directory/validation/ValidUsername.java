@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = CustomUsernameValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidUsername {
-    String message() default "Invalid username format. Username must contain only letters.";
+    String message() default "Invalid format. Please use only letters!";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
