@@ -305,14 +305,12 @@
         const searchInput = document.getElementById("search");
         const searchTerm = searchInput.value.toLowerCase();
 
-        // If the search term is empty, reset the table to its initial state
         if (searchTerm === "") {
             currentPage = 1;
             displayContacts();
             return;
         }
 
-        // Filter the contacts based on the search query
         const filteredContacts = Array.from(contacts).filter(contact => {
             const name = contact.querySelector("td:nth-child(1)").textContent.toLowerCase();
             const lastName = contact.querySelector("td:nth-child(2)").textContent.toLowerCase();

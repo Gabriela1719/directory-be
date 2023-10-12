@@ -58,15 +58,8 @@ public class ContactController {
         return new ResponseEntity<>(contactDto, HttpStatus.OK);
     }
 
-//    @PostMapping("/kontakt")
-//    public ResponseEntity<ContactDto> createContact(@Valid @RequestBody ContactDto contactDto, Authentication authentication) {
-//        Contact createdContact = contactService.createContact(contactDto, authentication);
-//        ContactDto createdContactDto = contactMapper.contactToContactDto(createdContact);
-//        return new ResponseEntity<>(createdContactDto, HttpStatus.CREATED);
-//    }
-
     @PostMapping("/kontakt")
-    public String createContact(@Valid @ModelAttribute("contactDto") ContactDto contactDto, Contact contact,
+    public String createContact(@Valid ContactDto contactDto,
                                 BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessages", bindingResult.getAllErrors());

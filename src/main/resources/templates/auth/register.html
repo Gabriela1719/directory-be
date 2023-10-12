@@ -88,19 +88,22 @@
             <div th:if="${errorMessage != null}" class="alert alert-danger">
                 <p th:text="${errorMessage}"></p>
             </div>
+            <div id="error-container"></div>
             <div class="card">
 
                 <div class="card-header text-center">
                     <h5 class="blue-text">Register</h5>
                 </div>
                 <div class="card-body">
-                    <form method="post" role="form" th:action="@{/register}" class="form-horizontal">
+                    <form method="POST" role="form" th:action="@{/register}" class="form-horizontal">
+
                         <div class="input-group mb-3">
                             <span class="input-group-text">
                                 <i class="bi bi-person-fill"></i>
                             </span>
                             <input type="text"
                                    name="username"
+                                   id="username"
                                    class="form-control"
                                    placeholder="Username" required/>
 
@@ -136,5 +139,7 @@
         </div>
     </div>
 </div>
+<script>
+</script>
 </body>
 </html>
