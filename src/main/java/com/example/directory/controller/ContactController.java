@@ -66,7 +66,7 @@ public class ContactController {
 //    }
 
     @PostMapping("/kontakt")
-    public String createContact(@Valid @ModelAttribute("contactDto") ContactDto contactDto, Contact contact,
+    public String createContact(@Valid ContactDto contactDto,
                                 BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessages", bindingResult.getAllErrors());

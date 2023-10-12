@@ -233,7 +233,6 @@
                             <label for="name">Name</label>
                             <input id="name" class="form-control" name="name" placeholder="First Name" required
                                    th:field="*{name}" type="text"/>
-                            <div class="text-danger" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
                         </div>
 
                         <div class="form-group">
@@ -241,10 +240,6 @@
                             <input id="lastname" class="form-control" name="lastname" placeholder="Last Name" required
                                    th:field="*{lastname}"
                                    type="text"/>
-                            <small class="text-danger" th:errors="*{lastname}"
-                                   th:if="${#fields.hasErrors('lastname')}"></small>
-                            <div class="text-danger" th:errors="*{lastname}"
-                                 th:if="${#fields.hasErrors('lastname')}"></div>
                         </div>
 
                         <div class="form-group">
@@ -278,14 +273,13 @@
                             <input id="value" class="form-control" name="value" placeholder="Value" required
                                    th:field="*{value}"
                                    type="text"/>
-                            <small class="text-danger" th:errors="*{value}"
-                                   th:if="${#fields.hasErrors('value')}"></small>
-                            <div class="text-danger" th:errors="*{value}" th:if="${#fields.hasErrors('value')}"></div>
                         </div>
 
                         <div class="form-group text-center">
                             <button class="btn btn-custom" type="submit" onchange="clearForm()">Create Contact</button>
                         </div>
+
+                        <div id="error-container"></div>
                     </form>
                 </div>
             </div>
@@ -593,6 +587,9 @@
 
     document.querySelector('form').addEventListener('submit', function(event) {
         event.preventDefault();
+        const errorContainer = document.getElementById('error-container');
+        errorContainer.innerHTML = '';
+
         const formData = new FormData(document.querySelector('form'));
 
         fetch('/adresar/kontakt', {
@@ -605,17 +602,61 @@
                     window.location.href = '/adresar';
                     localStorage.setItem('successMessage', 'Contact created successfully!');
                 } else {
-                    console.error('Greška prilikom spremanja kontakta.');
+                    response.json().then(data => {
+                        if (data.errors) {
+                            displayErrors(data.errors);
+                        } else {
+                            console.error('Nepoznat format odgovora servera:', data);
+                        }
+                    });
                 }
             })
             .catch(error => {
                 console.error('Greška prilikom slanja zahtjeva na server:', error);
             });
+
+        function displayErrors(errors) {
+            errors.forEach(error => {
+                const errorElement = document.createElement('div');
+                errorElement.className = 'alert alert-danger';
+                errorElement.style.width = '290px';
+                errorElement.style.marginTop = '10px';
+                errorElement.style.marginBottom = '10px';
+
+                // Filtriraj poruku o grešci
+                let errorMessage = error;
+
+                // Ako poruka sadrži ": ", uzmi samo tekst poruke o grešci
+                if (error.includes(': ')) {
+                    const parts = error.split(': ');
+                    errorMessage = parts.slice(1).join(': ');
+                }
+
+                // Ako poruka sadrži "createContact.contactDto.name", zameni je praznim stringom
+                errorMessage = errorMessage.replace('createContact.contactDto.name: ', '');
+                errorMessage = errorMessage.replace('createContact.contactDto.lastname: ', '');
+
+                const errorMessageLines = errorMessage.split(/\n/);
+
+                // Dodaj svaku liniju kao novi div element
+                errorMessageLines.forEach(line => {
+                    const lineElement = document.createElement('div');
+                    lineElement.textContent = line.trim(); // Ukloni prazne prostore sa početka i kraja linije
+                    errorElement.appendChild(lineElement);
+                });
+
+                errorContainer.appendChild(errorElement);
+            });
+        }
+
     });
+
     function clearForm() {
         const form = document.querySelector('form');
         form.reset();
     }
+
+
 
 </script>
 </body>
